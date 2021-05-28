@@ -32,13 +32,17 @@ public class ItemRestController {
     @DeleteMapping("/{id}")
     public void deleteItemsById(@PathVariable Long id) {
         itemService.delete(id);
-
     }
 
     @PutMapping("/{id}")
     public Item updateItem(@PathVariable Long id,
                            @RequestBody ItemDto itemDto) {
-
         return itemService.updateItem(itemDto, id);
+    }
+
+    @PostMapping
+
+    public Item addItemToCatalog(@RequestBody ItemDto itemDto) {
+        return itemService.addItemToCatalog(itemDto);
     }
 }

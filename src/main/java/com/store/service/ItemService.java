@@ -13,4 +13,6 @@ public interface ItemService {
     List<Item> filteredItem(FilteredItemsDto filteredItemsDto);
 
     Item updateItem(ItemDto itemDto, Long itemId);
+
+    Item addItemToCatalog(ItemDto itemDto);
 }

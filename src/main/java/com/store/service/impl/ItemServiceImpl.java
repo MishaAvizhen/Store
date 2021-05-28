@@ -44,4 +44,10 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.saveAndFlush(itemAfterUpdate);
     }
 
+    @Override
+    public Item addItemToCatalog(ItemDto itemDto) {
+        Item item = itemConverter.convertToEntity(itemDto);
+        return itemRepository.save(item);
+    }
+
 }
