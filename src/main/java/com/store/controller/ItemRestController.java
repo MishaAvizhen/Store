@@ -41,7 +41,6 @@ public class ItemRestController {
     }
 
     @PostMapping
-
     public Item addItemToCatalog(@RequestBody ItemDto itemDto) {
         return itemService.addItemToCatalog(itemDto);
     }
