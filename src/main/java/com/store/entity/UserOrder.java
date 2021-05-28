@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "user_order")
 public class UserOrder {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})

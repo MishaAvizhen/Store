@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         String username = userRegistrationDto.getUsername();
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
-            throw new IllegalArgumentException("User with name " + username + "already exist ");
+            throw new IllegalArgumentException("User with name " + username + " already exist ");
         }
         User user = userConverter.convertToEntity(userRegistrationDto);
         return userRepository.save(user);
