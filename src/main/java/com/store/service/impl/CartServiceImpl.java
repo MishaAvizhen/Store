@@ -7,12 +7,10 @@ import com.store.service.CartService;
 import com.store.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.List;
 import java.util.Optional;
 
-@SessionAttributes("cart")
 @Service
 public class CartServiceImpl implements CartService {
 
@@ -36,7 +34,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteFromCart(Long id, List<Long> cart ) {
+    public void deleteFromCart(Long id, List<Long> cart) {
         if (!cart.contains(id)) {
             throw new ResourceNotFoundException(id.toString());
         }

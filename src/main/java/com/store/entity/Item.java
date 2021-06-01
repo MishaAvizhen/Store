@@ -69,5 +69,14 @@ public class Item {
     public void setItemsList(Set<OrderItem> itemsList) {
         this.itemsList = itemsList;
     }
+
+    @Override
+    public String toString() {
+        return "Items{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", tags='" + tags + '\'' +
+                '}';
+    }
 }
 

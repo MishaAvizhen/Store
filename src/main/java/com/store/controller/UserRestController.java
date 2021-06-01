@@ -27,9 +27,9 @@ public class UserRestController {
     }
 
     @PostMapping
-    public ResponseEntity<User> getCreatedUser(@RequestBody UserRegistrationDto userRegistrationDto) {
-        User user = userService.registerUser(userRegistrationDto);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+    public ResponseEntity<String> getCreatedUser(@RequestBody UserRegistrationDto userRegistrationDto) {
+         userService.registerUser(userRegistrationDto);
+        return new ResponseEntity<>("User was created", HttpStatus.OK);
     }
 
 }

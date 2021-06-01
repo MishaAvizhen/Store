@@ -30,10 +30,10 @@ public class UserOrderRestController {
     }
 
     @PostMapping(value = "/makeOrder")
-    public ResponseEntity<UserOrder> makeOrder(Principal principal, ModelMap modelMap) {
+    public ResponseEntity<String> makeOrder(Principal principal, ModelMap modelMap) {
         List<Long> cart = (List<Long>) modelMap.get("cart");
         User currentUser = userService.findUserByUsername(principal.getName());
-        UserOrder userOrder = userOrderService.makeOrder(currentUser, cart);
-        return new ResponseEntity<UserOrder>(userOrder, HttpStatus.OK);
+         userOrderService.makeOrder(currentUser, cart);
+        return new ResponseEntity<>("Order is completed", HttpStatus.OK);
     }
 }

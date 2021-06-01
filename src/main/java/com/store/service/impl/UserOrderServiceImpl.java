@@ -7,6 +7,7 @@ import com.store.entity.UserOrder;
 import com.store.repository.ItemRepository;
 import com.store.repository.OrderItemRepository;
 import com.store.repository.UserOrderRepository;
+import com.store.service.MailService;
 import com.store.service.UserOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,21 +21,23 @@ public class UserOrderServiceImpl implements UserOrderService {
     private UserOrderRepository userOrderRepository;
     private ItemRepository itemRepository;
     private OrderItemRepository orderItemRepository;
+    private MailService mailService;
 
     @Autowired
-    public UserOrderServiceImpl(UserOrderRepository userOrderRepository, ItemRepository itemRepository, OrderItemRepository orderItemRepository) {
+    public UserOrderServiceImpl(UserOrderRepository userOrderRepository, ItemRepository itemRepository, OrderItemRepository orderItemRepository, MailService mailService) {
         this.userOrderRepository = userOrderRepository;
         this.itemRepository = itemRepository;
         this.orderItemRepository = orderItemRepository;
+        this.mailService = mailService;
     }
 
     @Override
-    public UserOrder makeOrder(User orderedByUser, List<Long> itemIds) {
+    public UserOrder makeOrder(User orderedByUser, List<Long> itemIdsFromCart) {
         List<Item> items = new ArrayList<>();
         UserOrder userOrder = new UserOrder();
         userOrder.setOrderedByUser(orderedByUser);
         UserOrder savedUserOrder = userOrderRepository.save(userOrder);
-        for (Long itemId : itemIds) {
+        for (Long itemId : itemIdsFromCart) {
             Optional<Item> itemOptional = itemRepository.findById(itemId);
             if (itemOptional.isPresent()) {
                 Item item = itemOptional.get();
@@ -52,7 +55,8 @@ public class UserOrderServiceImpl implements UserOrderService {
             savedUserOrderItems.add(saveOrderItem);
         }
         savedUserOrder.setOrderItems(savedUserOrderItems);
-        itemIds.clear();
+        mailService.sendMail(orderedByUser.getEmail(), itemRepository.findAll());
+        itemIdsFromCart.clear();
         return userOrderRepository.save(savedUserOrder);
     }
 }
