@@ -9,4 +9,6 @@ public interface UserService {
     List<User> findAllUsers();
 
     User registerUser(UserRegistrationDto userRegistrationDto);
+
+    User findUserByUsername(String username);
 }

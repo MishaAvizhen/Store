@@ -5,6 +5,7 @@ import com.store.dto.ItemDto;
 import com.store.entity.Item;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemService {
 
@@ -15,4 +16,6 @@ public interface ItemService {
     Item updateItem(ItemDto itemDto, Long itemId);
 
     Item addItemToCatalog(ItemDto itemDto);
+
+    Optional<Item> findById(Long itemId);
 }

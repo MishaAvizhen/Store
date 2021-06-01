@@ -1,5 +1,7 @@
 package com.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,12 +12,12 @@ public class OrderItem {
     private Long id;
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "user_order_id")
+    @JsonBackReference
     private UserOrder userOrder;
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "item_id")
+    @JsonBackReference
     private Item item;
-    @Column(name = "amount")
-    private Long amount;
 
     public OrderItem() {
     }
@@ -44,12 +46,5 @@ public class OrderItem {
         this.item = item;
     }
 
-    public Long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
 }
 

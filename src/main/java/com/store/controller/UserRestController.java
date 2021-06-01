@@ -4,6 +4,8 @@ import com.store.dto.UserRegistrationDto;
 import com.store.entity.User;
 import com.store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +21,15 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.findAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> allUsers = userService.findAllUsers();
+        return new ResponseEntity<List<User>>(allUsers, HttpStatus.OK);
     }
+
     @PostMapping
-    public User getCreatedUser(@RequestBody UserRegistrationDto userRegistrationDto) {
-        return userService.registerUser(userRegistrationDto);
+    public ResponseEntity<User> getCreatedUser(@RequestBody UserRegistrationDto userRegistrationDto) {
+        User user = userService.registerUser(userRegistrationDto);
+        return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
 }

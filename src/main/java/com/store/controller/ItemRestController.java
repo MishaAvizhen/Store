@@ -6,6 +6,8 @@ import com.store.dto.ItemDto;
 import com.store.entity.Item;
 import com.store.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,26 +24,32 @@ public class ItemRestController {
     }
 
     @GetMapping
-    public List<Item> getAllItems(@RequestParam(value = "description", required = false) String description,
+    public ResponseEntity<List<Item>> getAllItems(@RequestParam(value = "description", required = false) String description,
                                   @RequestParam(value = "tags", required = false) String tags,
                                   @RequestParam(value = "title", required = false) String title) {
         FilteredItemsDto filteredItemsDto = new FilteredItemsDto(description, tags, title);
-        return itemService.filteredItem(filteredItemsDto);
+        List<Item> items = itemService.filteredItem(filteredItemsDto);
+        return new ResponseEntity<>(items, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")
-    public void deleteItemsById(@PathVariable Long id) {
+    public ResponseEntity<String> removeFromCart(@PathVariable Long id) {
         itemService.delete(id);
+        return new ResponseEntity<String>(" Item was deleted from cart", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public Item updateItem(@PathVariable Long id,
+    public ResponseEntity<Item> updateItem(@PathVariable Long id,
                            @RequestBody ItemDto itemDto) {
-        return itemService.updateItem(itemDto, id);
+        Item item = itemService.updateItem(itemDto, id);
+        return new ResponseEntity<Item>(item, HttpStatus.OK);
+
     }
 
     @PostMapping
-    public Item addItemToCatalog(@RequestBody ItemDto itemDto) {
-        return itemService.addItemToCatalog(itemDto);
+    public  ResponseEntity<Item> addItemToCatalog(@RequestBody ItemDto itemDto) {
+        Item item = itemService.addItemToCatalog(itemDto);
+        return new ResponseEntity<Item>(item, HttpStatus.OK);
     }
 }

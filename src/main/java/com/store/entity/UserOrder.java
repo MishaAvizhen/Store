@@ -1,5 +1,7 @@
 package com.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ public class UserOrder {
 
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "user_order")
+    @JsonBackReference
     private User orderedByUser;
 
     @OneToMany(mappedBy = "userOrder", cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH},

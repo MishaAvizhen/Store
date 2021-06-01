@@ -9,6 +9,7 @@ import com.store.service.ItemService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +49,11 @@ public class ItemServiceImpl implements ItemService {
     public Item addItemToCatalog(ItemDto itemDto) {
         Item item = itemConverter.convertToEntity(itemDto);
         return itemRepository.save(item);
+    }
+
+    @Override
+    public  Optional<Item> findById(Long itemId) {
+        return itemRepository.findById(itemId);
     }
 
 }
