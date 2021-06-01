@@ -13,7 +13,9 @@ public interface ItemService {
 
     List<Item> filteredItem(FilteredItemsDto filteredItemsDto);
 
-    Item updateItem(ItemDto itemDto, Long itemId);
+    Item updateItem(ItemDto itemDto, Long itemId, String username);
+
+    Item forceUpdateItem(ItemDto itemDto, Long itemId, String username);
 
     Item addItemToCatalog(ItemDto itemDto);
 

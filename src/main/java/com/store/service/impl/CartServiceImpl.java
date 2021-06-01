@@ -3,7 +3,6 @@ package com.store.service.impl;
 import com.store.cart.CartsManager;
 import com.store.entity.Item;
 import com.store.entity.User;
-import com.store.entity.UserOrder;
 import com.store.exception.ResourceAlreadyExist;
 import com.store.exception.ResourceNotFoundException;
 import com.store.service.CartService;
@@ -65,7 +64,6 @@ public class CartServiceImpl implements CartService {
         User userByUsername = userService.findUserByUsername(username);
         userOrderService.makeOrder(userByUsername, cartForUsername);
         cartForUsername.clear();
-
 
 
     }

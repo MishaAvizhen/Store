@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -25,8 +26,8 @@ public class ItemRestController {
 
     @GetMapping
     public ResponseEntity<List<Item>> getAllItems(@RequestParam(value = "description", required = false) String description,
-                                  @RequestParam(value = "tags", required = false) String tags,
-                                  @RequestParam(value = "title", required = false) String title) {
+                                                  @RequestParam(value = "tags", required = false) String tags,
+                                                  @RequestParam(value = "title", required = false) String title) {
         FilteredItemsDto filteredItemsDto = new FilteredItemsDto(description, tags, title);
         List<Item> items = itemService.filteredItem(filteredItemsDto);
         return new ResponseEntity<>(items, HttpStatus.OK);
@@ -40,16 +41,26 @@ public class ItemRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable Long id,
-                           @RequestBody ItemDto itemDto) {
-        Item item = itemService.updateItem(itemDto, id);
-        return new ResponseEntity<Item>(item, HttpStatus.OK);
+    public ResponseEntity<String> updateItem(@PathVariable Long id,
+                                             @RequestBody ItemDto itemDto, Principal principal) {
+
+        itemService.updateItem(itemDto, id, principal.getName());
+        return new ResponseEntity<String>("Item was updated", HttpStatus.OK);
+
+    }
+
+    @PutMapping("/forceUpdate/{id}")
+    public ResponseEntity<String> forceUpdateItem(@PathVariable Long id,
+                                                  @RequestBody ItemDto itemDto, Principal principal) {
+
+        itemService.forceUpdateItem(itemDto, id, principal.getName());
+        return new ResponseEntity<String>("Item was force updated", HttpStatus.OK);
 
     }
 
     @PostMapping
-    public  ResponseEntity<Item> addItemToCatalog(@RequestBody ItemDto itemDto) {
+    public ResponseEntity<String> addItemToCatalog(@RequestBody ItemDto itemDto) {
         Item item = itemService.addItemToCatalog(itemDto);
-        return new ResponseEntity<Item>(item, HttpStatus.OK);
+        return new ResponseEntity<>("Item add to catalog", HttpStatus.OK);
     }
 }

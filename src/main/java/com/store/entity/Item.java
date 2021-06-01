@@ -1,5 +1,7 @@
 package com.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +19,7 @@ public class Item {
     private String description;
     @Column(name = "tags")
     private String tags;
+    @JsonIgnore
     @OneToMany(mappedBy = "item", cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     private Set<OrderItem> itemsList = new HashSet<>();
 
@@ -71,11 +74,19 @@ public class Item {
     }
 
     @Override
-    public String toString() {
-        return "Item{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        return id.equals(item.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
 
