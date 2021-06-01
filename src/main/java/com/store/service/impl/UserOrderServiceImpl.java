@@ -32,12 +32,13 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     @Override
-    public UserOrder makeOrder(User orderedByUser, List<Long> itemIdsFromCart) {
+    public UserOrder makeOrder(User orderedByUser, List<Long> itemIds) {
         List<Item> items = new ArrayList<>();
         UserOrder userOrder = new UserOrder();
         userOrder.setOrderedByUser(orderedByUser);
         UserOrder savedUserOrder = userOrderRepository.save(userOrder);
-        for (Long itemId : itemIdsFromCart) {
+
+        for (Long itemId : itemIds) {
             Optional<Item> itemOptional = itemRepository.findById(itemId);
             if (itemOptional.isPresent()) {
                 Item item = itemOptional.get();
@@ -55,8 +56,30 @@ public class UserOrderServiceImpl implements UserOrderService {
             savedUserOrderItems.add(saveOrderItem);
         }
         savedUserOrder.setOrderItems(savedUserOrderItems);
-        mailService.sendMail(orderedByUser.getEmail(), itemRepository.findAll());
-        itemIdsFromCart.clear();
+        mailService.sendMail(orderedByUser.getEmail(), buildEmailMessage(savedUserOrder), "Order was created");
         return userOrderRepository.save(savedUserOrder);
     }
+
+    private String buildEmailMessage(UserOrder savedUserOrder) {
+        StringBuilder str = new StringBuilder();
+        str
+                .append("Добрый день!\n")
+                .append("Номер заказа: ").append(savedUserOrder.getId()).append("\n")
+                .append("Список товаров: \n");
+
+        for (OrderItem orderItem : savedUserOrder.getOrderItems()) {
+            str
+                    .append("Название: ")
+                    .append(orderItem.getItem().getTitle()).append(", ")
+                    .append("Описание: ")
+                    .append(orderItem.getItem().getDescription()).append("\n");
+
+        }
+        str
+                .append("Спасибо!!!");
+
+
+        return str.toString();
+    }
+
 }

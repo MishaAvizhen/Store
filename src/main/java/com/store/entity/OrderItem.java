@@ -46,5 +46,11 @@ public class OrderItem {
         this.item = item;
     }
 
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                ", item=" + item +
+                '}';
+    }
 }
 

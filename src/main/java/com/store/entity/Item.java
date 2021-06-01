@@ -72,10 +72,9 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Items{" +
+        return "Item{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", tags='" + tags + '\'' +
                 '}';
     }
 }

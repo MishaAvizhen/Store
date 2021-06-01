@@ -1,13 +1,14 @@
 package com.store.controller;
 
+import com.store.cart.CartsManager;
+import com.store.entity.User;
 import com.store.service.CartService;
 import com.store.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -16,38 +17,37 @@ import java.util.List;
 public class CartRestController {
     private ItemService itemService;
     private CartService cartService;
+    private CartsManager cartsManager;
 
-    public CartRestController(ItemService itemService, CartService cartService) {
+    public CartRestController(ItemService itemService, CartService cartService, CartsManager cartsManager) {
         this.itemService = itemService;
         this.cartService = cartService;
+        this.cartsManager = cartsManager;
     }
 
     @GetMapping(value = "/addToCart/{itemId}")
-    public ResponseEntity<String> addItemToCart(@PathVariable Long itemId, ModelMap modelMap) {
-        initSession(modelMap);
-        List<Long> cart = (List<Long>) modelMap.get("cart");
-        cartService.addToCart(itemId, cart);
+    public ResponseEntity<String> addItemToCart(@PathVariable Long itemId, Principal principal) {
+        String username = principal.getName();
+        cartService.addToCart(itemId, username);
         return new ResponseEntity<String>("Item was added to cart ", HttpStatus.OK);
     }
 
     @GetMapping(value = "/cart")
-    public ResponseEntity<List<Long>> cart(ModelMap modelMap) {
-        initSession(modelMap);
-        List<Long> cart = (List<Long>) modelMap.get("cart");
-        return new ResponseEntity<>(cart, HttpStatus.OK);
+    public ResponseEntity <List<Long>> cart(Principal principal) {
+        List<Long> cartForCurrentUser = cartService.getCartForCurrentUser(principal.getName());
+        return new ResponseEntity<>(cartForCurrentUser, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeFromCart(@PathVariable Long id, ModelMap modelMap) {
-        List<Long> cart = (List<Long>) modelMap.get("cart");
-        cartService.deleteFromCart(id, cart);
+    public ResponseEntity<String> removeFromCart(@PathVariable Long id, Principal principal) {
+        cartService.deleteFromCart(id, principal.getName());
         return new ResponseEntity<>("Item was deleted from cart ", HttpStatus.OK);
     }
 
-    private void initSession(ModelMap model) {
-        if (!model.containsAttribute("cart")) {
-            model.addAttribute("cart", new LinkedList<Long>());
-        }
+    @PostMapping(value = "/makeOrder")
+    public ResponseEntity<String> makeOrder(Principal principal) {
+        cartService.makeOrderByCart(principal.getName());
+        return new ResponseEntity<>("Order is completed", HttpStatus.OK);
     }
 
 }

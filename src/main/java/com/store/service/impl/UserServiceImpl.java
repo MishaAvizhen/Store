@@ -3,6 +3,7 @@ package com.store.service.impl;
 import com.store.converter.impl.UserConverter;
 import com.store.dto.UserRegistrationDto;
 import com.store.entity.User;
+import com.store.exception.ResourceNotFoundException;
 import com.store.repository.UserRepository;
 import com.store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
         String username = userRegistrationDto.getUsername();
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
-            throw new IllegalArgumentException("User with name " + username + " already exist ");
+            throw new ResourceNotFoundException("User with name " + username + " already exist ");
         }
         userRegistrationDto.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
         User user = userConverter.convertToEntity(userRegistrationDto);

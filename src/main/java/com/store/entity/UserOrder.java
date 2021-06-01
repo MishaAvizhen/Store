@@ -48,4 +48,13 @@ public class UserOrder {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
+
+    @Override
+    public String toString() {
+        return "UserOrder{" +
+                "orderItems=" + orderItems +
+                ", id=" + id +
+                ", orderedByUser=" + orderedByUser +
+                '}';
+    }
 }

@@ -1,11 +1,13 @@
 package com.store.service;
 
-import com.store.entity.Item;
-
 import java.util.List;
 
 public interface CartService {
-    void addToCart(Long itemId, List<Long> cart);
+    void addToCart(Long itemId, String username);
 
-    void deleteFromCart(Long id, List<Long> cart);
+    void deleteFromCart(Long id, String username);
+
+    List<Long> getCartForCurrentUser(String username);
+
+    void makeOrderByCart(String username);
 }
