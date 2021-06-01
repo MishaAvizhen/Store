@@ -1,7 +1,8 @@
 package com.store.service.impl;
 
 import com.store.entity.Item;
-import com.store.repository.ItemRepository;
+import com.store.exception.ResourceAlreadyExist;
+import com.store.exception.ResourceNotFoundException;
 import com.store.service.CartService;
 import com.store.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,10 @@ import java.util.Optional;
 @Service
 public class CartServiceImpl implements CartService {
 
-    private ItemRepository itemRepository;
     private ItemService itemService;
 
     @Autowired
-    public CartServiceImpl(ItemRepository itemRepository, ItemService itemService) {
-        this.itemRepository = itemRepository;
+    public CartServiceImpl(ItemService itemService) {
         this.itemService = itemService;
     }
 
@@ -28,17 +27,19 @@ public class CartServiceImpl implements CartService {
     public void addToCart(Long itemId, List<Long> cart) {
         Optional<Item> item = itemService.findById(itemId);
         if (!item.isPresent()) {
-            throw new IllegalArgumentException("This item not found");
+            throw new ResourceNotFoundException(itemId.toString());
         }
         if (cart.contains(itemId)) {
-            throw new IllegalArgumentException("This item already exist in cart");
+            throw new ResourceAlreadyExist(itemId.toString());
         }
         cart.add(itemId);
     }
 
     @Override
-    public void deleteFromCart(Long id) {
-
-
+    public void deleteFromCart(Long id, List<Long> cart ) {
+        if (!cart.contains(id)) {
+            throw new ResourceNotFoundException(id.toString());
+        }
+        cart.remove(id);
     }
 }

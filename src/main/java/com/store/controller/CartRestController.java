@@ -1,6 +1,5 @@
 package com.store.controller;
 
-import com.store.entity.Item;
 import com.store.service.CartService;
 import com.store.service.ItemService;
 import org.springframework.http.HttpStatus;
@@ -38,11 +37,11 @@ public class CartRestController {
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{itemId}")
-    public ResponseEntity<String> removeFromCart(@PathVariable Long itemId, ModelMap modelMap) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> removeFromCart(@PathVariable Long id, ModelMap modelMap) {
         List<Long> cart = (List<Long>) modelMap.get("cart");
-        cart.remove(itemId);
-        return new ResponseEntity<>("Item was  deleted with id: " + itemId, HttpStatus.OK);
+        cartService.deleteFromCart(id, cart);
+        return new ResponseEntity<>("Item was deleted from cart ", HttpStatus.OK);
     }
 
     private void initSession(ModelMap model) {
