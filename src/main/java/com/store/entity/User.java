@@ -38,6 +38,13 @@ public class User {
         this.userOrderList = userOrderList;
     }
 
+    public User(String username, String password, String email, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }

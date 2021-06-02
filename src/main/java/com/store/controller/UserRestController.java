@@ -26,4 +26,10 @@ public class UserRestController {
         return new ResponseEntity<>("User was created", HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<String> getAllUsers() {
+        userService.findAllUsers();
+        return new ResponseEntity<>("All users", HttpStatus.OK);
+    }
+
 }
