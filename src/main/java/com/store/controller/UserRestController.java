@@ -20,12 +20,6 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> allUsers = userService.findAllUsers();
-        return new ResponseEntity<List<User>>(allUsers, HttpStatus.OK);
-    }
-
     @PostMapping
     public ResponseEntity<String> getCreatedUser(@RequestBody UserRegistrationDto userRegistrationDto) {
          userService.registerUser(userRegistrationDto);

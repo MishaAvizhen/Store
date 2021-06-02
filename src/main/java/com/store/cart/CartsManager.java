@@ -38,7 +38,7 @@ public class CartsManager {
         if (userByUsername != null) {
             return getCartForUser(userByUsername);
         }
-        throw new ResourceNotFoundException("User not found with username " + username);
+        throw new ResourceNotFoundException("User not found with username: " + username);
     }
 
 }

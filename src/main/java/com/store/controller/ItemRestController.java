@@ -35,9 +35,9 @@ public class ItemRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeFromCart(@PathVariable Long id) {
+    public ResponseEntity<String> removeFromCatalog(@PathVariable Long id) {
         itemService.delete(id);
-        return new ResponseEntity<String>(" Item was deleted from cart", HttpStatus.OK);
+        return new ResponseEntity<String>(" Item was deleted from catalog", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -60,7 +60,7 @@ public class ItemRestController {
 
     @PostMapping
     public ResponseEntity<String> addItemToCatalog(@RequestBody ItemDto itemDto) {
-        Item item = itemService.addItemToCatalog(itemDto);
+        itemService.addItemToCatalog(itemDto);
         return new ResponseEntity<>("Item add to catalog", HttpStatus.OK);
     }
 }

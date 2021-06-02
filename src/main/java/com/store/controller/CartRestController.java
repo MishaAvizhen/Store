@@ -32,7 +32,7 @@ public class CartRestController {
         return new ResponseEntity<String>("Item was added to cart ", HttpStatus.OK);
     }
 
-    @GetMapping(value = "/cart")
+    @GetMapping
     public ResponseEntity <List<Long>> cart(Principal principal) {
         List<Long> cartForCurrentUser = cartService.getCartForCurrentUser(principal.getName());
         return new ResponseEntity<>(cartForCurrentUser, HttpStatus.OK);

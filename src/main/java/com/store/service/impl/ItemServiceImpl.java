@@ -7,6 +7,7 @@ import com.store.dto.ItemDto;
 import com.store.entity.Item;
 import com.store.entity.User;
 import com.store.exception.ResourceAlreadyExist;
+import com.store.exception.ResourceNotFoundException;
 import com.store.repository.ItemRepository;
 import com.store.service.ItemService;
 import com.store.service.MailService;
@@ -33,8 +34,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void delete(Long id) {
-        itemRepository.deleteById(id);
-
+        Optional<Item> item = itemRepository.findById(id);
+        if (item.isPresent()) {
+            itemRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     @Override
@@ -59,6 +64,22 @@ public class ItemServiceImpl implements ItemService {
         Item itemAfterUpdate = itemConverter.convertEntityToUpdate(itemDto, itemToUpdate);
         return itemRepository.saveAndFlush(itemAfterUpdate);
     }
+
+    @Override
+    public Item forceUpdateItem(ItemDto itemDto, Long itemId, String username) {
+        Map<User, List<Long>> userToCartMap = cartsManager.getUserToCartMap();
+        Item itemToUpdate = itemRepository.getOne(itemId);
+        Item itemAfterUpdate = itemConverter.convertEntityToUpdate(itemDto, itemToUpdate);
+        for (Map.Entry<User, List<Long>> userListEntry : userToCartMap.entrySet()) {
+            User user = userListEntry.getKey();
+            List<Long> cartIdList = userListEntry.getValue();
+            if (cartIdList.contains(itemId)) {
+                mailService.sendMail(user.getEmail(), buildEmailMessage( itemAfterUpdate), "Item was updated");
+            }
+        }
+        return itemRepository.saveAndFlush(itemAfterUpdate);
+    }
+
     @Override
     public Item addItemToCatalog(ItemDto itemDto) {
         Item item = itemConverter.convertToEntity(itemDto);
@@ -67,47 +88,25 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Optional<Item> findById(Long itemId) {
-        return itemRepository.findById(itemId);
-    }
-
-
-    @Override
-    public Item forceUpdateItem(ItemDto itemDto, Long itemId, String username) {
-        Map<User, List<Long>> userToCartMap = cartsManager.getUserToCartMap();
-        Item itemToUpdate = itemRepository.getOne(itemId);
-        Item oldItem = itemRepository.getOne(itemId);
-        Item itemAfterUpdate = itemConverter.convertEntityToUpdate(itemDto, itemToUpdate);
-        for (Map.Entry<User, List<Long>> userListEntry : userToCartMap.entrySet()) {
-            User user = userListEntry.getKey();
-            List<Long> cartIdList = userListEntry.getValue();
-            if (cartIdList.contains(itemId)) {
-                mailService.sendMail(user.getEmail(), buildEmailMessage(oldItem, itemAfterUpdate), "Item was updated");
-            }
+        Optional<Item> item = itemRepository.findById(itemId);
+        if (!item.isPresent()) {
+            throw new ResourceNotFoundException(itemId);
         }
-
-        return itemRepository.saveAndFlush(itemAfterUpdate);
+        return item;
     }
 
-    private String buildEmailMessage(Item oldItem, Item itemAfterUpdate) {
+
+    private String buildEmailMessage( Item itemAfterUpdate) {
         StringBuilder str = new StringBuilder();
         str
                 .append("Добрый день!\n")
                 .append("Товар в корзине  изменен: ").append("\n")
-                .append("Было: \n")
-                .append("Название: ")
-                .append(oldItem.getTitle()).append(", ")
-                .append("Описание: ")
-                .append(oldItem.getDescription()).append("\n")
-                .append("Стало: \n")
                 .append("Название: ")
                 .append(itemAfterUpdate.getTitle()).append(", ")
                 .append("Описание: ")
                 .append(itemAfterUpdate.getDescription()).append("\n");
         str
                 .append("Спасибо!!!");
-
-
         return str.toString();
     }
-
 }

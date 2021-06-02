@@ -65,6 +65,5 @@ public class CartServiceImpl implements CartService {
         userOrderService.makeOrder(userByUsername, cartForUsername);
         cartForUsername.clear();
 
-
     }
 }

@@ -73,12 +73,9 @@ public class UserOrderServiceImpl implements UserOrderService {
                     .append(orderItem.getItem().getTitle()).append(", ")
                     .append("Описание: ")
                     .append(orderItem.getItem().getDescription()).append("\n");
-
         }
         str
                 .append("Спасибо!!!");
-
-
         return str.toString();
     }
 
