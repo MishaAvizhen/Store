@@ -19,5 +19,5 @@ public interface ItemService {
 
     Item addItemToCatalog(ItemDto itemDto);
 
-    Optional<Item> findById(Long itemId);
+    Item findById(Long itemId);
 }

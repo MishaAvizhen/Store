@@ -39,7 +39,7 @@ public class UserServiceTest {
         when(userRepository.findAll()).thenReturn(userTestData.getAllTestUsers());
         when(userRepository.findByUsername("user")).thenReturn(userTestData.getTestUserByUsername("user"));
         when(userRepository.save(any((User.class)))).thenAnswer(i -> userTestData.saveTestUser((User) i.getArguments()[0]));
-   }
+    }
 
     @Test
     public void registerUser() throws Exception {
@@ -49,26 +49,29 @@ public class UserServiceTest {
         String registerMail = registerUsername + "@mail.ru";
 
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto(registerUsername, registerPassword, registerMail);
-        userService.registerUser(userRegistrationDto);
-        User registeredUser = userTestData.getTestUserByUsername(registerUsername);
-        Assert.assertNotNull(registeredUser);
-        Assert.assertEquals(registeredUser.getUsername(), registerUsername);
+        User expectedUser = userService.registerUser(userRegistrationDto);
+        Assert.assertNotNull("Username not found", expectedUser);
+        String expectedUsername = expectedUser.getUsername();
+        User actualUser = userTestData.getTestUserByUsername(registerUsername);
+        String actualUsername = actualUser.getUsername();
+        Assert.assertNotNull("registered user equals null ", actualUser);
+        Assert.assertEquals("Username is not equals", expectedUsername, actualUsername);
     }
 
     @Test
     public void findUserByUsername() throws Exception {
 
-        String expectedUserName = "user";
-        User user = userService.findUserByUsername(expectedUserName);
+        String actualUsername = "user";
+        User user = userService.findUserByUsername(actualUsername);
         Assert.assertNotNull("User equals null", user);
-        String actualUsername = user.getUsername();
+        String expectedUserName = user.getUsername();
         Assert.assertEquals("Username is not equals", expectedUserName, actualUsername);
     }
 
     @Test
     public void findAllUsers() throws Exception {
-        List<User> expectedAllUsers = userTestData.getAllTestUsers();
-        List<User> actualAllUsers = userService.findAllUsers();
+        List<User> actualAllUsers = userTestData.getAllTestUsers();
+        List<User> expectedAllUsers = userService.findAllUsers();
         Assert.assertEquals(expectedAllUsers.size(), actualAllUsers.size());
     }
 }

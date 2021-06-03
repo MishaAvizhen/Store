@@ -60,7 +60,7 @@ public class ItemServiceImpl implements ItemService {
                 throw new ResourceAlreadyExist("This item currently in cart");
             }
         }
-        Item itemToUpdate = itemRepository.getOne(itemId);
+        Item itemToUpdate = findById(itemId);
         Item itemAfterUpdate = itemConverter.convertEntityToUpdate(itemDto, itemToUpdate);
         return itemRepository.saveAndFlush(itemAfterUpdate);
     }
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
             User user = userListEntry.getKey();
             List<Long> cartIdList = userListEntry.getValue();
             if (cartIdList.contains(itemId)) {
-                mailService.sendMail(user.getEmail(), buildEmailMessage( itemAfterUpdate), "Item was updated");
+                mailService.sendMail(user.getEmail(), buildEmailMessage(itemAfterUpdate), "Item was updated");
             }
         }
         return itemRepository.saveAndFlush(itemAfterUpdate);
@@ -87,16 +87,16 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Optional<Item> findById(Long itemId) {
+    public Item findById(Long itemId) {
         Optional<Item> item = itemRepository.findById(itemId);
         if (!item.isPresent()) {
             throw new ResourceNotFoundException(itemId);
         }
-        return item;
+        return item.get();
     }
 
 
-    private String buildEmailMessage( Item itemAfterUpdate) {
+    private String buildEmailMessage(Item itemAfterUpdate) {
         StringBuilder str = new StringBuilder();
         str
                 .append("Добрый день!\n")

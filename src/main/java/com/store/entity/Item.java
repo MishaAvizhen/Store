@@ -33,6 +33,12 @@ public class Item {
         this.itemsList = itemsList;
     }
 
+    public Item(String title, String description, String tags) {
+        this.title = title;
+        this.description = description;
+        this.tags = tags;
+    }
+
     public Long getId() {
         return id;
     }
@@ -71,6 +77,16 @@ public class Item {
 
     public void setItemsList(Set<OrderItem> itemsList) {
         this.itemsList = itemsList;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", tags='" + tags + '\'' +
+                '}';
     }
 
     @Override
