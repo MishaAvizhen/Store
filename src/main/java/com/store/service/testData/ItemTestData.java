@@ -1,8 +1,6 @@
 package com.store.service.testData;
 
-import com.store.constants.Role;
 import com.store.entity.Item;
-import com.store.entity.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +23,7 @@ public class ItemTestData {
     }
 
     private void initItemTestData() {
-        saveTestItem(buildItemForTest( 1L));
-
+        saveTestItem(buildItemForTest(1L));
     }
 
     private Item buildItemForTest(Long id) {
@@ -46,14 +43,16 @@ public class ItemTestData {
         itemsForTest.put(item.getId(), item);
         return item;
     }
+
     public Item updateTestItem(Item testItem) {
         saveTestItem(testItem);
         return testItem;
     }
+
     public Item deleteTestItemById(Long itemId) {
         return itemsForTest.remove(itemId);
-
     }
+
     public Item getTestItemById(Long itemId) {
         for (Item item : itemsForTest.values()) {
             if (item.getId().equals(itemId)) {
@@ -62,5 +61,4 @@ public class ItemTestData {
         }
         return null;
     }
-
 }

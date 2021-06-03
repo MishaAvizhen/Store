@@ -1,5 +1,6 @@
 package com.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.store.constants.Role;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class User {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+    @JsonIgnore
     @OneToMany(mappedBy = "orderedByUser", cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     private List<UserOrder> userOrderList = new ArrayList<>();
 

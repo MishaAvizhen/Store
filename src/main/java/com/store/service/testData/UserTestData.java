@@ -46,11 +46,8 @@ public class UserTestData {
         return usersForTest.get(username);
     }
 
-
     public User saveTestUser(User user) {
         usersForTest.put(user.getUsername(), user);
         return user;
     }
-
-
 }

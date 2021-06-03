@@ -19,6 +19,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @ComponentScan("com.store.security")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private static final String[] AUTH_WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html/**",
+            "/webjars/**",
+    };
 
     @Autowired
     private CustomUserDetailsServiceImpl customUserDetailsService;
@@ -44,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/items/**").hasAnyAuthority((Role.ADMIN.name()))
                 .antMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority((Role.ADMIN.name()))
                 .antMatchers("/api/cart/**").hasAnyAuthority((Role.ADMIN.name()), (Role.USER.name()))
+                .antMatchers(AUTH_WHITELIST).permitAll()
 
                 .anyRequest().authenticated()
                 .and()
@@ -51,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
